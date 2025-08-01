@@ -330,6 +330,10 @@ const handleIntroClose = () => settings.setShowIntro(false);
 
 // Handle category change
 function handleCategoryChange(category: string, updateUrl: boolean = true) {
+	if (category === currentCategory) {
+		return;
+	}
+
 	currentCategory = category;
 	
 	// Reset view mode when changing categories (when map view is implemented)
