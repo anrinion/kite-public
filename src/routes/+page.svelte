@@ -59,6 +59,9 @@ let allCategoryStories = $state<Record<string, Story[]>>({});
 let categoryMap = $state<Record<string, string>>({});  // Map category ID to UUID
 let currentBatchId = $state<string>('');
 
+// Component references
+let storyList = $state<typeof StoryList>();
+
 // State for source overlay
 let showSourceOverlay = $state(false);
 let currentSource = $state<any>(null);
@@ -607,6 +610,7 @@ if (browser && typeof window !== 'undefined') {
 					categories={orderedCategories}
 					{currentCategory} 
 					onCategoryChange={handleCategoryChange}
+					onCategoryDoubleClick={() => storyList?.toggleExpandAll()}
 					mobilePosition="bottom"
 					temporaryCategory={temporaryCategory}
 					showTemporaryTooltip={showTemporaryCategoryTooltip}
@@ -622,6 +626,7 @@ if (browser && typeof window !== 'undefined') {
 					/>
 				{:else}
 					<StoryList
+						bind:this={storyList}
 						{stories}
 						{currentCategory}
 						batchId={currentBatchId}

@@ -22,6 +22,9 @@ interface Props {
 	storyCountOverride?: number | null;
 }
 
+// Export toggleExpandAll function for external use
+export { toggleExpandAll };
+
 let { 
 	stories = [],
 	currentCategory, 
@@ -196,20 +199,6 @@ const allStoriesExpanded = $derived(
 					{/if}
 				</p>
 			</div>
-                {/if}
-
-                <!-- Expand all / Collapse all button -->
-                {#if displayedStories.length > 0}
-                        <div class="mt-6 w-full text-center">
-                                <button
-                                        onclick={toggleExpandAll}
-                                        class="w-full rounded-lg bg-gray-100 px-6 py-3 text-gray-800 transition-colors duration-200 hover:bg-gray-200 md:w-auto dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-                                >
-                                        {allStoriesExpanded
-                                                ? s('article.collapseAll') || 'Collapse all'
-                                                : s('article.expandAll') || 'Expand all'}
-                                </button>
-                        </div>
                 {/if}
 
                 <!-- Mark all as read button -->

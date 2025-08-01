@@ -13,6 +13,7 @@ interface Props {
 	categories?: Category[];
 	currentCategory?: string;
 	onCategoryChange?: (category: string) => void;
+	onCategoryDoubleClick?: (category: string) => void;
 	mobilePosition?: 'top' | 'bottom';
 	temporaryCategory?: string | null;
 	showTemporaryTooltip?: boolean;
@@ -21,7 +22,8 @@ interface Props {
 let { 
 	categories = [], 
 	currentCategory = 'World', 
-	onCategoryChange, 
+	onCategoryChange,
+	onCategoryDoubleClick,
 	mobilePosition = 'bottom',
 	temporaryCategory = null,
 	showTemporaryTooltip = false
@@ -182,6 +184,7 @@ $effect(() => {
 						class:dark:hover:text-gray-200={currentCategory !== category.id}
 						onclick={() => handleCategoryClick(category.id)}
 						onkeydown={(e) => handleCategoryKeydown(e, category.id)}
+						ondblclick={() => onCategoryDoubleClick?.(category.id)}
 					>
 						{getCategoryDisplayName(category)}
 					</button>
