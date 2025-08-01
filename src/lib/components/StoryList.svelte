@@ -27,7 +27,7 @@ let {
 	currentCategory, 
 	batchId,
 	readStories = $bindable({}),
-	expandedStories = {},
+	expandedStories = $bindable({}),
 	onStoryToggle,
 	showSourceOverlay = $bindable(false),
 	currentSource = $bindable(null),
@@ -56,6 +56,24 @@ function markAllAsRead() {
 		readStories[story.title] = true;
 	});
 }
+
+// Expand or collapse all stories
+function toggleExpandAll() {
+	const expand = !allStoriesExpanded;
+	const newExpanded: Record<string, boolean> = { ...expandedStories };
+
+	displayedStories.forEach(story => {
+		const id = story.cluster_number?.toString() || story.title;
+		if (expand) {
+			newExpanded[id] = true;
+		} else {
+			delete newExpanded[id];
+		}
+	});
+
+	expandedStories = newExpanded;
+}
+
 
 // Apply content filtering and story count limit
 const { displayedStories, filteredCount, hiddenStories } = $derived.by(() => {
@@ -89,7 +107,15 @@ const { displayedStories, filteredCount, hiddenStories } = $derived.by(() => {
 
 // Check if all stories are read
 const allStoriesRead = $derived(
-	displayedStories.every(story => readStories[story.title])
+        displayedStories.every(story => readStories[story.title])
+);
+
+// Check if all stories are expanded
+const allStoriesExpanded = $derived(
+        displayedStories.length > 0 &&
+                displayedStories.every(story =>
+                        expandedStories[story.cluster_number?.toString() || story.title]
+                )
 );
 </script>
 
@@ -167,11 +193,25 @@ const allStoriesRead = $derived(
 					{/if}
 				</p>
 			</div>
-		{/if}
-		
-		<!-- Mark all as read button -->
-		{#if !allStoriesRead && displayedStories.length > 0}
-			<div class="mt-6 w-full text-center">
+                {/if}
+
+                <!-- Expand all / Collapse all button -->
+                {#if displayedStories.length > 0}
+                        <div class="mt-6 w-full text-center">
+                                <button
+                                        onclick={toggleExpandAll}
+                                        class="w-full rounded-lg bg-gray-100 px-6 py-3 text-gray-800 transition-colors duration-200 hover:bg-gray-200 md:w-auto dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                                >
+                                        {allStoriesExpanded
+                                                ? s('article.collapseAll') || 'Collapse all'
+                                                : s('article.expandAll') || 'Expand all'}
+                                </button>
+                        </div>
+                {/if}
+
+                <!-- Mark all as read button -->
+                {#if !allStoriesRead && displayedStories.length > 0}
+                        <div class="mt-6 w-full text-center">
 				<button
 					onclick={markAllAsRead}
 					class="w-full rounded-lg bg-gray-100 px-6 py-3 text-gray-800 transition-colors duration-200 hover:bg-gray-200 md:w-auto dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"

@@ -560,14 +560,14 @@ if (browser && typeof window !== 'undefined') {
 		onError={handleDataError}
 		initialBatchId={urlParams.batchId}
 		initialCategoryId={urlParams.categoryId}
-	/>
+					/>
 {:else if settings.showIntro}
 	<IntroScreen visible={settings.showIntro} onClose={handleIntroClose} />
-{:else}
+				{:else}
 	<!-- History Manager for URL state -->
 	<HistoryManager
-		bind:this={historyManager}
-		batchId={currentBatchId}
+						bind:this={historyManager}
+						batchId={currentBatchId}
 		categoryId={currentCategory}
 		storyIndex={currentStoryIndex}
 		onNavigate={handleUrlNavigation}
@@ -576,13 +576,13 @@ if (browser && typeof window !== 'undefined') {
 	<div class="md:hidden">
 		<CategoryNavigation 
 			categories={orderedCategories}
-			{currentCategory} 
+						{currentCategory} 
 			onCategoryChange={handleCategoryChange}
 			mobilePosition={categoryHeaderPosition}
 			temporaryCategory={temporaryCategory}
 			showTemporaryTooltip={false}
 		/>
-	</div>
+			</div>
 
 	<!-- Main Content -->
 	<main 
@@ -603,7 +603,7 @@ if (browser && typeof window !== 'undefined') {
 			<!-- Category Navigation - Desktop (normal document flow) -->
 			<div class="hidden md:block">
 				<CategoryNavigation 
-					bind:this={desktopCategoryNavigation}
+						bind:this={desktopCategoryNavigation}
 					categories={orderedCategories}
 					{currentCategory} 
 					onCategoryChange={handleCategoryChange}
@@ -621,11 +621,11 @@ if (browser && typeof window !== 'undefined') {
 						onWikipediaClick={handleWikipediaClick}
 					/>
 				{:else}
-					<StoryList 
+					<StoryList
 						{stories}
 						{currentCategory}
 						batchId={currentBatchId}
-						{expandedStories}
+						bind:expandedStories
 						onStoryToggle={handleStoryToggle}
 						bind:readStories
 						bind:showSourceOverlay
@@ -645,9 +645,9 @@ if (browser && typeof window !== 'undefined') {
 				{currentCategory}
 				onShowAbout={() => settings.setShowIntro(true)}
 			/>
-		</div>
+			</div>
 	</main>
-{/if}
+				{/if}
 
 <!-- Settings Modal -->
 <Settings 
