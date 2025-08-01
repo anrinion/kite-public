@@ -6,6 +6,7 @@ import { dataLanguage } from '$lib/stores/dataLanguage.svelte.js';
 import { fontSize, type FontSize } from '$lib/stores/fontSize.svelte.js';
 import { storyCount } from '$lib/stores/storyCount.svelte.js';
 import { settings } from '$lib/stores/settings.svelte.js';
+import type { StoryExpandMode } from '$lib/stores/settings.svelte.js';
 import { SUPPORTED_LANGUAGES } from '$lib/constants/languages.js';
 import { dataReloadService } from '$lib/services/dataService.js';
 import Select from '$lib/components/Select.svelte';
@@ -140,8 +141,13 @@ function handleStoryCountChange(count: number) {
 
 // Category header position change handler
 function handleCategoryHeaderPositionChange(position: string) {
-	settings.setCategoryHeaderPosition(position as any);
-	currentCategoryHeaderPosition = position;
+        settings.setCategoryHeaderPosition(position as any);
+        currentCategoryHeaderPosition = position;
+}
+
+function handleStoryExpandModeChange(mode: StoryExpandMode) {
+        settings.setStoryExpandMode(mode);
+        currentStoryExpandMode = mode;
 }
 
 // Show about screen
@@ -257,12 +263,12 @@ function showAbout() {
 
 	<!-- Story Expand Mode Setting -->
 	<div class="flex flex-col space-y-2">
-		<Select
-			bind:value={currentStoryExpandMode}
-			options={storyExpandModeOptions}
-			label={s('settings.storyExpandMode.label') || 'Story Expand Mode'}
-			onChange={(mode) => settings.setStoryExpandMode(mode as import('$lib/stores/settings.svelte.js').StoryExpandMode)}
-		/>
+               <Select
+                       bind:value={currentStoryExpandMode}
+                       options={storyExpandModeOptions}
+                       label={s('settings.storyExpandMode.label') || 'Story Expand Mode'}
+                       onChange={handleStoryExpandModeChange}
+               />
 		<p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
 			{s('settings.storyExpandMode.description') || 'Choose how stories expand in a category'}
 		</p>
