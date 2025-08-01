@@ -45,6 +45,7 @@ let storyCountOverride = $state<number | null>(null);
 // Reactive category header position
 const categoryHeaderPosition = $derived(settings.categoryHeaderPosition);
 
+const storyExpandMode = $derived(settings.storyExpandMode);
 
 // Data state
 let categories = $state<Category[]>([]);
@@ -364,6 +365,10 @@ function handleCategoryChange(category: string, updateUrl: boolean = true) {
 		historyManager.updateUrl({ categoryId: category, storyIndex: null });
 	}
 	
+	if (storyExpandMode === 'always') {
+		storyList?.toggleExpandAll();
+	}
+
 	// Chaos index is already loaded with the batch data
 }
 
@@ -475,8 +480,8 @@ $effect(() => {
 	// Initialize category if needed
 	// Don't reset if we have a temporary category that matches current
 	if (orderedCategories.length > 0 && 
-	    !orderedCategories.find(cat => cat.id === currentCategory) &&
-	    !(temporaryCategory && currentCategory === temporaryCategory)) {
+		!orderedCategories.find(cat => cat.id === currentCategory) &&
+		!(temporaryCategory && currentCategory === temporaryCategory)) {
 		currentCategory = orderedCategories[0].id;
 		return; // Exit early, let the next effect run handle loading
 	}
@@ -567,14 +572,14 @@ if (browser && typeof window !== 'undefined') {
 		onError={handleDataError}
 		initialBatchId={urlParams.batchId}
 		initialCategoryId={urlParams.categoryId}
-					/>
+	/>
 {:else if settings.showIntro}
 	<IntroScreen visible={settings.showIntro} onClose={handleIntroClose} />
-				{:else}
+{:else}
 	<!-- History Manager for URL state -->
 	<HistoryManager
-						bind:this={historyManager}
-						batchId={currentBatchId}
+		bind:this={historyManager}
+		batchId={currentBatchId}
 		categoryId={currentCategory}
 		storyIndex={currentStoryIndex}
 		onNavigate={handleUrlNavigation}
@@ -590,7 +595,7 @@ if (browser && typeof window !== 'undefined') {
 			temporaryCategory={temporaryCategory}
 			showTemporaryTooltip={false}
 		/>
-			</div>
+	</div>
 
 	<!-- Main Content -->
 	<main 
@@ -611,7 +616,7 @@ if (browser && typeof window !== 'undefined') {
 			<!-- Category Navigation - Desktop (normal document flow) -->
 			<div class="hidden md:block">
 				<CategoryNavigation 
-						bind:this={desktopCategoryNavigation}
+					bind:this={desktopCategoryNavigation}
 					categories={orderedCategories}
 					{currentCategory} 
 					onCategoryChange={handleCategoryChange}
@@ -655,9 +660,9 @@ if (browser && typeof window !== 'undefined') {
 				{currentCategory}
 				onShowAbout={() => settings.setShowIntro(true)}
 			/>
-			</div>
+		</div>
 	</main>
-				{/if}
+	{/if}
 
 <!-- Settings Modal -->
 <Settings 

@@ -141,13 +141,13 @@ function handleStoryCountChange(count: number) {
 
 // Category header position change handler
 function handleCategoryHeaderPositionChange(position: string) {
-        settings.setCategoryHeaderPosition(position as any);
-        currentCategoryHeaderPosition = position;
+	settings.setCategoryHeaderPosition(position as any);
+	currentCategoryHeaderPosition = position;
 }
 
 function handleStoryExpandModeChange(mode: StoryExpandMode) {
-        settings.setStoryExpandMode(mode);
-        currentStoryExpandMode = mode;
+	settings.setStoryExpandMode(mode);
+	currentStoryExpandMode = mode;
 }
 
 // Show about screen
@@ -263,12 +263,12 @@ function showAbout() {
 
 	<!-- Story Expand Mode Setting -->
 	<div class="flex flex-col space-y-2">
-               <Select
-                       bind:value={currentStoryExpandMode}
-                       options={storyExpandModeOptions}
-                       label={s('settings.storyExpandMode.label') || 'Story Expand Mode'}
-                       onChange={handleStoryExpandModeChange}
-               />
+			   <Select
+					   bind:value={currentStoryExpandMode}
+					   options={storyExpandModeOptions}
+					   label={s('settings.storyExpandMode.label') || 'Story Expand Mode'}
+					   onChange={handleStoryExpandModeChange}
+			   />
 		<p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
 			{s('settings.storyExpandMode.description') || 'Choose how stories expand in a category'}
 		</p>

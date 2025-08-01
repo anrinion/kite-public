@@ -59,9 +59,8 @@ function markAllAsRead() {
 }
 
 // Expand or collapse all stories
-function toggleExpandAll() {
+export function toggleExpandAll() {
 	const expand = !allStoriesExpanded;
-	const newExpanded: Record<string, boolean> = { ...expandedStories };
 
 	// When collapsing, this is simple - just collapse all
 	if (!expand) {
@@ -70,36 +69,13 @@ function toggleExpandAll() {
 	}
 
 	// Expand all at once
+	const newExpanded: Record<string, boolean> = { ...expandedStories };
 	displayedStories.forEach(story => {
 		const id = story.cluster_number?.toString() || story.title;
 		newExpanded[id] = true;
 	});
 	expandedStories = newExpanded;
 }
-
-// Export for external use
-export { toggleExpandAll };
-
-// Track last category to detect category changes
-let lastCategory = $state('');
-
-// Auto-expand stories only when category changes in 'always' mode
-$effect(() => {
-	// Only auto-expand when changing categories
-	if (currentCategory !== lastCategory) {
-		lastCategory = currentCategory;
-		
-		// In 'always' mode, expand all stories when loading a new category
-		if (settings.storyExpandMode === 'always' && displayedStories.length > 0) {
-			const newExpanded: Record<string, boolean> = {};
-			displayedStories.forEach(story => {
-				const id = story.cluster_number?.toString() || story.title;
-				newExpanded[id] = true;
-			});
-			expandedStories = newExpanded;
-		}
-	}
-});
 
 // Apply content filtering and story count limit
 const { displayedStories, filteredCount, hiddenStories } = $derived.by(() => {
@@ -133,15 +109,15 @@ const { displayedStories, filteredCount, hiddenStories } = $derived.by(() => {
 
 // Check if all stories are read
 const allStoriesRead = $derived(
-        displayedStories.every(story => readStories[story.title])
+		displayedStories.every(story => readStories[story.title])
 );
 
 // Check if all stories are expanded
 const allStoriesExpanded = $derived(
-        displayedStories.length > 0 &&
-                displayedStories.every(story =>
-                        expandedStories[story.cluster_number?.toString() || story.title]
-                )
+		displayedStories.length > 0 &&
+				displayedStories.every(story =>
+						expandedStories[story.cluster_number?.toString() || story.title]
+				)
 );
 </script>
 
@@ -220,11 +196,11 @@ const allStoriesExpanded = $derived(
 					{/if}
 				</p>
 			</div>
-                {/if}
+        {/if}
 
-                <!-- Mark all as read button -->
-                {#if !allStoriesRead && displayedStories.length > 0}
-                        <div class="mt-6 w-full text-center">
+		<!-- Mark all as read button -->
+		{#if !allStoriesRead && displayedStories.length > 0}
+			<div class="mt-6 w-full text-center">
 				<button
 					onclick={markAllAsRead}
 					class="w-full rounded-lg bg-gray-100 px-6 py-3 text-gray-800 transition-colors duration-200 hover:bg-gray-200 md:w-auto dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
