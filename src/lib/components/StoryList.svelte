@@ -3,6 +3,7 @@ import { s } from '$lib/client/localization.svelte';
 import StoryCard from './story/StoryCard.svelte';
 import type { Story } from '$lib/types';
 import { storyCount } from '$lib/stores/storyCount.svelte.js';
+import { settings } from '$lib/stores/settings.svelte.js';
 import { contentFilter } from '$lib/stores/contentFilter.svelte.js';
 import { filterStories, type FilteredStory } from '$lib/utils/contentFilter';
 
@@ -21,9 +22,6 @@ interface Props {
 	isLoadingMediaInfo?: boolean;
 	storyCountOverride?: number | null;
 }
-
-// Export toggleExpandAll function for external use
-export { toggleExpandAll };
 
 let { 
 	stories = [],
@@ -79,6 +77,29 @@ function toggleExpandAll() {
 	expandedStories = newExpanded;
 }
 
+// Export for external use
+export { toggleExpandAll };
+
+// Track last category to detect category changes
+let lastCategory = $state('');
+
+// Auto-expand stories only when category changes in 'always' mode
+$effect(() => {
+	// Only auto-expand when changing categories
+	if (currentCategory !== lastCategory) {
+		lastCategory = currentCategory;
+		
+		// In 'always' mode, expand all stories when loading a new category
+		if (settings.storyExpandMode === 'always' && displayedStories.length > 0) {
+			const newExpanded: Record<string, boolean> = {};
+			displayedStories.forEach(story => {
+				const id = story.cluster_number?.toString() || story.title;
+				newExpanded[id] = true;
+			});
+			expandedStories = newExpanded;
+		}
+	}
+});
 
 // Apply content filtering and story count limit
 const { displayedStories, filteredCount, hiddenStories } = $derived.by(() => {

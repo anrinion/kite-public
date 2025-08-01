@@ -57,8 +57,16 @@ let currentLanguage = $state(language.current as string);
 let currentDataLanguage = $state(dataLanguage.current as string);
 let currentFontSize = $state(fontSize.current as string);
 let currentCategoryHeaderPosition = $state(settings.categoryHeaderPosition as string);
+let currentStoryExpandMode = $state(settings.storyExpandMode as string);
 let isLanguageLoading = $state(false);
 let isDataLanguageLoading = $state(false);
+
+// Story expand mode options for display
+const storyExpandModeOptions = $derived([
+	{ value: 'always', label: s('settings.storyExpandMode.always') || 'Always expand all' },
+	{ value: 'doubleClick', label: s('settings.storyExpandMode.doubleClick') || 'Double-click to expand all' },
+	{ value: 'never', label: s('settings.storyExpandMode.never') || 'Never expand all' }
+]);
 
 // Sync local state with stores
 $effect(() => {
@@ -79,6 +87,10 @@ $effect(() => {
 
 $effect(() => {
 	currentCategoryHeaderPosition = settings.categoryHeaderPosition as string;
+});
+
+$effect(() => {
+	currentStoryExpandMode = settings.storyExpandMode as string;
 });
 
 // Theme change handler
@@ -241,6 +253,19 @@ function showAbout() {
 			label={s('settings.fontSize.label') || 'Text Size'}
 			onChange={handleFontSizeChange}
 		/>
+	</div>
+
+	<!-- Story Expand Mode Setting -->
+	<div class="flex flex-col space-y-2">
+		<Select
+			bind:value={currentStoryExpandMode}
+			options={storyExpandModeOptions}
+			label={s('settings.storyExpandMode.label') || 'Story Expand Mode'}
+			onChange={(mode) => settings.setStoryExpandMode(mode as import('$lib/stores/settings.svelte.js').StoryExpandMode)}
+		/>
+		<p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+			{s('settings.storyExpandMode.description') || 'Choose how stories expand in a category'}
+		</p>
 	</div>
 
 	<!-- Story Count Setting -->

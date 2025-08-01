@@ -60,7 +60,7 @@ let categoryMap = $state<Record<string, string>>({});  // Map category ID to UUI
 let currentBatchId = $state<string>('');
 
 // Component references
-let storyList = $state<typeof StoryList>();
+let storyList = $state<StoryList | undefined>();
 
 // State for source overlay
 let showSourceOverlay = $state(false);
@@ -583,8 +583,9 @@ if (browser && typeof window !== 'undefined') {
 	<div class="md:hidden">
 		<CategoryNavigation 
 			categories={orderedCategories}
-						{currentCategory} 
+			{currentCategory} 
 			onCategoryChange={handleCategoryChange}
+			onCategoryDoubleClick={() => storyList?.toggleExpandAll()}
 			mobilePosition={categoryHeaderPosition}
 			temporaryCategory={temporaryCategory}
 			showTemporaryTooltip={false}
