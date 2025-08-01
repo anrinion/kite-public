@@ -62,15 +62,17 @@ function toggleExpandAll() {
 	const expand = !allStoriesExpanded;
 	const newExpanded: Record<string, boolean> = { ...expandedStories };
 
+	// When collapsing, this is simple - just collapse all
+	if (!expand) {
+		expandedStories = {};
+		return;
+	}
+
+	// Expand all at once
 	displayedStories.forEach(story => {
 		const id = story.cluster_number?.toString() || story.title;
-		if (expand) {
-			newExpanded[id] = true;
-		} else {
-			delete newExpanded[id];
-		}
+		newExpanded[id] = true;
 	});
-
 	expandedStories = newExpanded;
 }
 
@@ -165,6 +167,7 @@ const allStoriesExpanded = $derived(
 				categoryId={currentCategory}
 				isRead={readStories[story.title] || false}
 				isExpanded={expandedStories[story.cluster_number?.toString() || story.title] || false}
+				shouldAutoScroll={!allStoriesExpanded}
 				onToggle={() => handleStoryToggle(story)}
 				onReadToggle={() => handleReadToggle(story)}
 				priority={index < 3}
